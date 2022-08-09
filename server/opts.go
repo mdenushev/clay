@@ -19,6 +19,7 @@ type serverOpts struct {
 	// If HTTPPort is the same then muxing listener is created.
 	HTTPPort int
 	HTTPMux  transport.Router
+	Host     string
 
 	HTTPMiddlewares []func(http.Handler) http.Handler
 
@@ -31,6 +32,7 @@ func defaultServerOpts(mainPort int) *serverOpts {
 		RPCPort:  mainPort,
 		HTTPPort: mainPort,
 		HTTPMux:  chi.NewMux(),
+		Host:     "127.0.0.1",
 	}
 }
 
@@ -86,5 +88,11 @@ func WithHTTPMux(mux *chi.Mux) Option {
 func WithHTTPRouterMux(mux transport.Router) Option {
 	return func(o *serverOpts) {
 		o.HTTPMux = mux
+	}
+}
+
+func WithHost(host string) Option {
+	return func(opts *serverOpts) {
+		opts.Host = host
 	}
 }
